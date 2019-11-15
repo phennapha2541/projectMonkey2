@@ -1,0 +1,34 @@
+<ons-page id="address">
+    <ons-toolbar id="bgtoolbar" style="background-color: #f7e336;">
+        <div class="left" id="back1">
+            <ons-back-button></ons-back-button>
+        </div>
+        </ons-toolbar-button>
+
+        <div class="center" style="text-align: center; color: black;">Address</div>
+        <div class="right">
+            <ons-toolbar-button>
+                <div id="logout">
+                    <ons-icon icon="fa-sign-out" style="color:black;"></ons-icon>
+                </div>
+            </ons-toolbar-button>
+        </div>
+    </ons-toolbar>
+
+    <div class="content" style="text-align: center;">
+        <ons-row class="current location">
+            <ons-col modifier="nodivider">
+                <h2 id="header" class="category_header_title"></h2>
+            </ons-col>
+        </ons-row>
+
+        <div id='map'></div>
+        <pre id='coordinates' class='coordinates'></pre>
+        <ons-fab position="bottom right" id="setaddress"
+            onclick="fn.pushPage({'id': 'payment.html', 'title': 'payment'})">
+            <ons-icon icon="fa-map-pin">
+            </ons-icon>
+        </ons-fab>
+    </div>
+
+</ons-page>

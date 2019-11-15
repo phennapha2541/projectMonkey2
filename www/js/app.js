@@ -55,6 +55,60 @@ document.addEventListener('init', function (event) {
     $("#myNavigator")[0].pushPage("payment.html");
   }
 
+  if (page.id === 'address') {
+    console.log('address');
+    var lat, selectedLat;
+    var lng, selectedLng;
+
+    var onSuccess = function (position) {
+      lat = position.coords.latitude;
+      lng = position.coords.longitude;
+
+
+      mapboxgl.accessToken = 'pk.eyJ1IjoicGhlbm5hcGhhIiwiYSI6ImNrMzAwYWFiczA4aW4zYm5zcmMyeG1vem8ifQ.xOCAmGJili7CCuXloKsxFA';
+      var map = new mapboxgl.Map({
+      container: 'map', // container id
+      style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+      center: [lng, lat], // starting position [lng, lat]
+      zoom: 7 // starting zoom
+      });
+      var marker = new mapboxgl.Marker({
+        draggable: true
+      })
+        .setLngLat([lng, lat])
+        .addTo(map);
+
+      function onDragEnd() {
+        var lngLat = marker.getLngLat();
+        selectedLat = lngLat.lat;
+        selectedLng = lngLat.lng;
+        coordinates.style.display = 'block';
+        coordinates.innerHTML = 'Longitude: ' + lngLat.lng + '<br />Latitude: ' + lngLat.lat;
+      }
+
+      marker.on('dragend', onDragEnd);
+    };
+
+    // onError Callback receives a PositionError object
+    //
+    function onError(error) {
+      alert('code: ' + error.code + '\n' +
+        'message: ' + error.message + '\n');
+    }
+
+    navigator.geolocation.getCurrentPosition(onSuccess, onError);
+
+    $("#setaddress").click(function () {
+     ons.notification.alert("Delivery:" + selectedLat + "," + selectedLng);
+     
+    });
+
+    $("#back1").click(function () {
+      window.location = 'index.html'
+    });
+  
+  }
+
   if (page.id === 'payment') {
     var show_main_menu = (fast1 = localStorage.getItem("fast1"));
     console.log("show_main_menu: " + show_main_menu);
@@ -192,6 +246,22 @@ document.addEventListener('init', function (event) {
     $("#home").click(function () {
       $("#content")[0].load("home.html");
       $("#sidemenu")[0].close();
+    });
+
+    $("#address").click(function () {
+      content.load('address.html');
+      $("#menu")[0].close();
+    });
+    $("#logout").click(function () {
+      //firebase sign out
+      firebase.auth().signOut().then(function () {
+        // Sign-out successful.
+        content.load('login.html');
+        $("#menu")[0].close();
+      }).catch(function (error) {
+        // An error happened.
+        console.log(error.message);
+      });
     });
   }
 
