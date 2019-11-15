@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Onsen App</title>
+
+    <!-- <script src="lib/onsen/js/onsenui.js"></script>
+    <script src="lib/jquery/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="lib/onsen/css/onsenui.css">
+    <link rel="stylesheet" href="lib/onsen/css/onsen-css-components.css">
+    <link rel="stylesheet" type="text/css" href="path/to/onsen-css-components.css"> -->
+
+     <!-- firebase link  -->
+    <script src="https://www.gstatic.com/firebasejs/7.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase.js"></script>
+
+    <!-- link bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <!-- onsen  link -->
+    <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+    <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+    <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+   
+
+</head>
+
+<style>
+    #mypage .page__background {
+        background-color: gold;
+    }
+</style>
+
+<body>
+    <ons-navigator id="myNavigator" page="register.html">
+    </ons-navigator>
+    <center>
+        <ons-page id='mypage'>
+            <ons-card>
+
+                    <div id="backhomebtn" onclick="back()" style="margin :20px;">
+                            <ons-icon icon="fa-arrow-left"> Back </ons-icon>
+                        </div>
+                   
+                    <center>
+                <div>
+                    <p>
+                        <img src="images/monkey.png"  alt="Logo register"
+                            style="width:100px; height:80%; margin: -20px;">
+                    </p>
+
+                    <p><ons-icon size="30px" icon="md-face"></ons-icon></p>
+
+                    <h3>Create an Account?</h3>
+                    <p>By registering an account, you accept all terms and conditions</p>
+
+                    <p style="margin-top: 30px; border: 1px solid Gray; border-radius: 8px; width: 280px;">
+                        <ons-input id="username" placeholder="Full Name" float></ons-input>
+                    </p>
+
+                    <p style="margin-top: 30px; border: 1px solid Gray; border-radius: 8px; width: 280px;">
+                        <ons-input id="email" placeholder="Email Address" float></ons-input>
+                    </p>
+
+                    <p style="margin-top: 30px; border: 1px solid Gray; border-radius: 8px; width: 280px;">
+                        <ons-input id="nphone" placeholder="Phone Number" float></ons-input>
+                    </p>
+
+                    <p style="margin-top: 30px; border: 1px solid Gray; border-radius: 8px; width: 280px;">
+                        <ons-input id="pass1" type="password" placeholder="Password" float></ons-input>
+                    </p>
+
+                    <p>
+                        <ons-button id="submit" class="button--large--cta"
+                            style="background-color: rgb(197, 148, 207);width: 280px; border-radius: 7px; margin: 0 auto;"> 
+                            Register</ons-button>
+                            
+                    </p>
+
+                </div>
+                </center>
+            </ons-card>
+        </ons-page>
+    </center>
+</body>
+
+<script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+          apiKey: "AIzaSyDxSowNwNJaGK0XAkmhZ0qVt-vKT0GS614",
+          authDomain: "food247-10746.firebaseapp.com",
+          databaseURL: "https://food247-10746.firebaseio.com",
+          projectId: "food247-10746",
+          storageBucket: "food247-10746.appspot.com",
+          messagingSenderId: "780845371970",
+          appId: "1:780845371970:web:e0f57513c268e832d093db"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.firestore();
+
+
+
+        const saveButton = document.querySelector("#submit");
+
+        saveButton.addEventListener("click", function () {
+            const username_text = username.value;
+            const email_text = email.value;
+            const nphone_text = nphone.value;
+            const password_text = pass1.value;
+
+
+            firebase.auth().createUserWithEmailAndPassword(email_text, password_text).catch(function (error) {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+
+                console.log(error);
+            }).then(function (sendEmailVerify) {
+                if (sendEmailVerify === false) {
+                    return false
+                } else {
+                    firebase.auth().currentUser.sendEmailVerification();
+
+                    db.collection("Users").get().then(function (querySnapshot) {
+
+                        db.collection('Users').doc(email_text).set({
+
+                            user: username_text,
+                            email: email_text,
+                            nphone: nphone_text
+
+                        }).then(function () {
+                            console.log("Status saved!");
+
+                            window.location.href = "index.html";
+                        }).catch(function (error) {
+                            console.log("Got an Error: ", error);
+
+                        });
+                    });
+                    return true;
+                }
+
+            })
+
+        });
+
+        function back() {
+        window.location.href = 'login.html';
+     }
+    
+</script>
+
+
+</html>
