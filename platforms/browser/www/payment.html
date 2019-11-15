@@ -15,9 +15,13 @@
         </div>
       </ons-toolbar>
 
+
+      
     
 
      <div class="content" style="text-align: center; margin-top: 10px; ">
+        <img src="images/service.jpg" alt="Logo FoodMonkey" style="width:130px;height:100px; padding: 2em;">
+
         <div id ="imgpayment">
 
         </div>
@@ -34,29 +38,11 @@
         
 
         <center>
-            <p>
-                <h3>Pay via</h3>
-                <ons-button id="registerbt" class="button--large--cta"
-                    style="background-color: rgb(132, 15, 155);width: 280px; border-radius: 10px; margin: 0 auto;">
-                    Credit Card</ons-button></br>
+            <div class="modal-footer">
+                <ons-button class="btn btn-primary" onclick="fn.pushPage({'id': 'address.html', 'title': 'address'})">Confirm Order</button>
+              </div>
 
-                <ons-button id="registerbt" class="button--large--cta"
-                    style="background-color: rgb(33, 5, 189);width: 280px; border-radius: 10px; margin: 0 auto;">
-                    PayPal</ons-button></br>
-
-                <ons-button id="registerbt" class="button--large--cta"
-                    style="background-color: rgb(13, 2, 15);width: 280px; border-radius: 10px; margin: 0 auto;">
-                    Cash on Delivery</ons-button></br>
-            </p>
         </center>
-
-        <!-- <p style="text-align: center; ">
-        <div style="background:rgb(248, 171, 4);; height: 60px;">
-                <ons-button modifier="quiet">
-                    <h1 style="font-size: 18px; color:rgb(255, 255, 255);" onclick="con()">Confirm </h1>
-                </ons-button>
-            </div>
-        </p>  -->
 
     </div>
   

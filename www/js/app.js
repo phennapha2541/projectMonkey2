@@ -55,6 +55,39 @@ document.addEventListener('init', function (event) {
     $("#myNavigator")[0].pushPage("payment.html");
   }
 
+  if (page.id === 'Confirmpm') {
+    var show_main_menu = (fast1 = localStorage.getItem("fast1"));
+    console.log("show_main_menu: " + show_main_menu);
+
+
+    var show_order = order;
+    console.log("show_sub_menu_id :" + show_order);
+
+    // var sum_mony = prices;
+    // console.log("sum_mony :" + sum_mony);
+
+    var Address_use = "หอพักชาย 80/1 ม.1 ถ.วิชิตสงคราม....";
+    var Contact = "080-8624087";
+    var payment = "Cach of delivery" ;
+
+    $(".address").empty();
+    var sumprice1 = `<ons-list-item>
+    <ons-row>
+        <b style="width: 40%; font-size: 12px;">Address : </b>
+        <b style="width: 60%; font-size: 12px;">` + Address_use + `</b>
+    </ons-row>
+    <ons-row>
+    <b style="width: 40%; font-size: 12px;">Contact : </b>
+    <b style="width: 60%; font-size: 12px;">` + Contact + `</b>
+    </ons-row>
+    <ons-row>
+    <b style="width: 40%; font-size: 12px;">Payment : </b>
+    <b style="width: 60%; font-size: 12px;">` + payment + `</b>
+    </ons-row>
+    </ons-list-item>`;
+    $(".address").append(sumprice1);
+  }
+
   if (page.id === 'address') {
     console.log('address');
     var lat, selectedLat;
@@ -566,3 +599,25 @@ function regiter() {
 function back() {
   window.location.href = 'login.html';
 }
+
+window.fn = {};
+
+window.fn.open = function () {
+  var menu = document.getElementById('menu');
+  menu.open();
+};
+
+window.fn.load = function (page) {
+  var content = document.getElementById('content');
+  var menu = document.getElementById('menu');
+  content.load(page)
+    .then(menu.close.bind(menu));
+};
+
+window.fn.pushPage = function (page, anim) {
+  if (anim) {
+    document.getElementById('myNavigator').pushPage(page.id, { data: { title: page.title }, animation: anim });
+  } else {
+    document.getElementById('myNavigator').pushPage(page.id, { data: { title: page.title } });
+  }
+};

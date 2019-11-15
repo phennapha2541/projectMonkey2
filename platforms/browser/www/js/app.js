@@ -55,6 +55,93 @@ document.addEventListener('init', function (event) {
     $("#myNavigator")[0].pushPage("payment.html");
   }
 
+  if (page.id === 'Confirmpm') {
+    var show_main_menu = (fast1 = localStorage.getItem("fast1"));
+    console.log("show_main_menu: " + show_main_menu);
+
+
+    var show_order = order;
+    console.log("show_sub_menu_id :" + show_order);
+
+    // var sum_mony = prices;
+    // console.log("sum_mony :" + sum_mony);
+
+    var Address_use = "หอพักชาย 80/1 ม.1 ถ.วิชิตสงคราม....";
+    var Contact = "080-8624087";
+    var payment = "Cach of delivery" ;
+
+    $(".address").empty();
+    var sumprice1 = `<ons-list-item>
+    <ons-row>
+        <b style="width: 40%; font-size: 12px;">Address : </b>
+        <b style="width: 60%; font-size: 12px;">` + Address_use + `</b>
+    </ons-row>
+    <ons-row>
+    <b style="width: 40%; font-size: 12px;">Contact : </b>
+    <b style="width: 60%; font-size: 12px;">` + Contact + `</b>
+    </ons-row>
+    <ons-row>
+    <b style="width: 40%; font-size: 12px;">Payment : </b>
+    <b style="width: 60%; font-size: 12px;">` + payment + `</b>
+    </ons-row>
+    </ons-list-item>`;
+    $(".address").append(sumprice1);
+  }
+
+  if (page.id === 'address') {
+    console.log('address');
+    var lat, selectedLat;
+    var lng, selectedLng;
+
+    var onSuccess = function (position) {
+      lat = position.coords.latitude;
+      lng = position.coords.longitude;
+
+
+      mapboxgl.accessToken = 'pk.eyJ1IjoicGhlbm5hcGhhIiwiYSI6ImNrMzAwYWFiczA4aW4zYm5zcmMyeG1vem8ifQ.xOCAmGJili7CCuXloKsxFA';
+      var map = new mapboxgl.Map({
+      container: 'map', // container id
+      style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+      center: [lng, lat], // starting position [lng, lat]
+      zoom: 7 // starting zoom
+      });
+      var marker = new mapboxgl.Marker({
+        draggable: true
+      })
+        .setLngLat([lng, lat])
+        .addTo(map);
+
+      function onDragEnd() {
+        var lngLat = marker.getLngLat();
+        selectedLat = lngLat.lat;
+        selectedLng = lngLat.lng;
+        coordinates.style.display = 'block';
+        coordinates.innerHTML = 'Longitude: ' + lngLat.lng + '<br />Latitude: ' + lngLat.lat;
+      }
+
+      marker.on('dragend', onDragEnd);
+    };
+
+    // onError Callback receives a PositionError object
+    //
+    function onError(error) {
+      alert('code: ' + error.code + '\n' +
+        'message: ' + error.message + '\n');
+    }
+
+    navigator.geolocation.getCurrentPosition(onSuccess, onError);
+
+    $("#setaddress").click(function () {
+     ons.notification.alert("Delivery:" + selectedLat + "," + selectedLng);
+     
+    });
+
+    $("#back1").click(function () {
+      window.location = 'index.html'
+    });
+  
+  }
+
   if (page.id === 'payment') {
     var show_main_menu = (fast1 = localStorage.getItem("fast1"));
     console.log("show_main_menu: " + show_main_menu);
@@ -192,6 +279,22 @@ document.addEventListener('init', function (event) {
     $("#home").click(function () {
       $("#content")[0].load("home.html");
       $("#sidemenu")[0].close();
+    });
+
+    $("#address").click(function () {
+      content.load('address.html');
+      $("#menu")[0].close();
+    });
+    $("#logout").click(function () {
+      //firebase sign out
+      firebase.auth().signOut().then(function () {
+        // Sign-out successful.
+        content.load('login.html');
+        $("#menu")[0].close();
+      }).catch(function (error) {
+        // An error happened.
+        console.log(error.message);
+      });
     });
   }
 
@@ -496,3 +599,25 @@ function regiter() {
 function back() {
   window.location.href = 'login.html';
 }
+
+window.fn = {};
+
+window.fn.open = function () {
+  var menu = document.getElementById('menu');
+  menu.open();
+};
+
+window.fn.load = function (page) {
+  var content = document.getElementById('content');
+  var menu = document.getElementById('menu');
+  content.load(page)
+    .then(menu.close.bind(menu));
+};
+
+window.fn.pushPage = function (page, anim) {
+  if (anim) {
+    document.getElementById('myNavigator').pushPage(page.id, { data: { title: page.title }, animation: anim });
+  } else {
+    document.getElementById('myNavigator').pushPage(page.id, { data: { title: page.title } });
+  }
+};
